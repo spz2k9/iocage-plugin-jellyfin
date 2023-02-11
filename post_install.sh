@@ -13,4 +13,4 @@ pw group mod video -m jellyfinserver
 sysrc -f /etc/rc.conf jellyfinserver_enable="YES"
 
 # Start the service
-service emby-server start 2>/dev/null
+service jellyfinserver start 2>/dev/null
