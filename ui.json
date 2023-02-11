@@ -1,0 +1,4 @@
+{
+	"adminportal": "http://%%IP%%:8096",
+        "docurl": "https://github.com/Thefrank/jellyfin-server-freebsd"
+}
