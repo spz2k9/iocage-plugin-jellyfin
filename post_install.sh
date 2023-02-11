@@ -1,10 +1,7 @@
 #!/bin/sh
 
-# Install the package
-pkg install -y /tmp/jfs.pkg
-
-# Remove the unneeded package
-rm -f /tmp/jfs.pkg
+# run the Install / Update script
+/usr/local/bin/jellyfin_updater
 
 # Add the video group to the jellyfinserver user
 pw group mod video -m jellyfinserver

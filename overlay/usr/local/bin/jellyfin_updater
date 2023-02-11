@@ -1,0 +1,139 @@
+#!/usr/bin/env python3.9
+
+import json
+import os
+import urllib.request
+import subprocess
+import sys
+
+from subprocess import run, PIPE
+from os import path
+
+# Global configuration
+githubUrl = 'https://api.github.com/repos/Thefrank/jellyfin-server-freebsd/releases/latest'
+
+#tmpfile = '/tmp/jellyfinserver-10.8.9.pkg'
+#markerfile = '/usr/local/etc/jellyfinserver.version'
+
+tmpfile = 'jellyfinserver-10.8.9.pkg'
+markerfile = 'jellyfinserver.version'
+# Global configuration
+
+# Global Json Buffer
+js = None
+# Global Json Buffer
+
+def ReadFile(path):
+  f = open(path, 'r')
+  v = f.read().replace('v', '').strip()
+  f.close()
+  return v
+
+def CompareVersion(v1, v2):
+  return v1 == v2
+
+def GetGitHubJsonLatest():
+  global js  
+  response = urllib.request.urlopen(githubUrl)
+  html = response.read()
+  response.close()
+  js = json.loads(html)
+
+def GetPkgUrlFromJS():
+  url = None
+  for item in js['assets']:
+    if '.pkg' in item['name']:
+      url = item['browser_download_url']
+      break
+  return url
+
+def GetLastestVersionJS():
+  return js['tag_name'].replace('v', '').strip()
+
+def DownloadFile(url, path):
+  print('Downloading "' + url +'" to "' + path + '"')
+  if not FileExists(path):
+    urllib.request.urlretrieve(url, filename=path)
+  print('Download complete')
+
+def UpdatePresent():
+  v1 = ReadFile(markerfile)
+  v2 = GetLastestVersionJS()
+  return not CompareVersion(v1, v2)
+
+def FileExists(file):
+  return path.exists(file)
+
+def RemoveFile(file):
+  if FileExists(file):
+    print('Removing temporary file : ' + file)
+    os.remove(file)
+
+def PackageInstalled():
+  return FileExists(markerfile)
+
+def StartStopService(action):
+  print('service ' + action + ' jellyfinserver')
+  RunCommand(['service', action, 'jellyfinserver'])
+
+def StopService():
+  StartStopService('stop')
+
+def StartService():
+  StartStopService('start')
+
+def CreateMarkerFile(version):
+  print('create marker file (' + markerfile + ') for version : ' + version)
+  f = open(markerfile, 'w')
+  f.write(version)
+  f.close()
+
+def InstallPackage(pkg)
+  print('Installing package file : ' + pkg)
+  RunCommand(['pkg', 'install', '-y', pkg])
+
+def InstallService():
+  url = GetPkgUrlFromJS()
+
+  if not url == None:
+    DownloadFile(url, tmpfile)
+    if FileExists(tmpfile):
+      InstallPackage(tmpfile)
+      CreateMarkerFile(GetLastestVersionJS())
+      RemoveFile(tmpfile)
+    else:
+      print('package download failed.')
+  else:
+    print('Could not get download link from github.')
+    raise Exception('Download failed', url)
+
+def RunCommand(args):
+  subprocess.run(args)
+
+def UpdateService():
+  StopService()
+  InstallService()
+  StartService()
+
+def InstallOrUpdate():
+  GetGitHubJsonLatest()
+  vInstall = 0
+  vUpdate = 0
+
+  if PackageInstalled():
+    if UpdatePresent():
+      vUpdate = 1
+  else:
+    vInstall = 1
+
+  if vUpdate:
+    print('Jellyfin is installed and out of date... Updating.')
+    UpdateService()
+  elif vInstall == 1:
+    print('Jellyfin is not installed... installing.')
+    InstallService()
+  else:
+    print('Jellyfin is installed and up to date.')
+
+# Main
+InstallOrUpdate()
