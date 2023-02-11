@@ -1,10 +1,7 @@
 #!/bin/sh
 
-# Configure pkg for automation
-env ASSUME_ALWAYS_YES=YES pkg bootstrap
-
 # Install the package
-pkg install /tmp/jfs.pkg
+pkg install -y /tmp/jfs.pkg
 
 # Remove the unneeded package
 rm -f /tmp/jfs.pkg
