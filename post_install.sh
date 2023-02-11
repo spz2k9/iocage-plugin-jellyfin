@@ -4,7 +4,7 @@
 env ASSUME_ALWAYS_YES=YES pkg bootstrap
 
 # Install the package
-pkg -y install /tmp/jfs.pkg
+pkg install /tmp/jfs.pkg
 
 # Remove the unneeded package
 rm -f /tmp/jfs.pkg
