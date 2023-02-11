@@ -88,7 +88,7 @@ def CreateMarkerFile(version):
   f.write(version)
   f.close()
 
-def InstallPackage(pkg)
+def InstallPackage(pkg):
   print('Installing package file : ' + pkg)
   RunCommand(['pkg', 'install', '-y', pkg])
 
