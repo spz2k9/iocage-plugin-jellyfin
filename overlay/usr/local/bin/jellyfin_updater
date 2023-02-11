@@ -12,11 +12,8 @@ from os import path
 # Global configuration
 githubUrl = 'https://api.github.com/repos/Thefrank/jellyfin-server-freebsd/releases/latest'
 
-#tmpfile = '/tmp/jellyfinserver-10.8.9.pkg'
-#markerfile = '/usr/local/etc/jellyfinserver.version'
-
-tmpfile = 'jellyfinserver-10.8.9.pkg'
-markerfile = 'jellyfinserver.version'
+tmpfile = '/tmp/jellyfinserver.pkg'
+markerfile = '/usr/local/etc/jellyfinserver.version'
 # Global configuration
 
 # Global Json Buffer
@@ -33,7 +30,7 @@ def CompareVersion(v1, v2):
   return v1 == v2
 
 def GetGitHubJsonLatest():
-  global js  
+  global js
   response = urllib.request.urlopen(githubUrl)
   html = response.read()
   response.close()
