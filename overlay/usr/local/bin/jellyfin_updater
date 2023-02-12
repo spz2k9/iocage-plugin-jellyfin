@@ -84,7 +84,7 @@ def CreateMarkerFile(version):
   f.close()
 
 def InstallPackage(pkg):
-  printLine('\nInstalling Jellyfin server.\n')
+  print('\nInstalling Jellyfin server.\n')
   RunCommand(['pkg', 'install', '-y', pkg])
 
 def InstallService():
