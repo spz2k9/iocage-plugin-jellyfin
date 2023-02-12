@@ -63,14 +63,13 @@ def FileExists(file):
 
 def RemoveFile(file):
   if FileExists(file):
-    print('Removing temporary file : ' + file)
     os.remove(file)
 
 def PackageInstalled():
   return FileExists(markerfile)
 
 def StartStopService(action):
-  print('service ' + action + ' jellyfinserver')
+  print('\nExecuting : service ' + action + ' jellyfinserver\n')
   RunCommand(['service', action, 'jellyfinserver'])
 
 def StopService():
@@ -80,13 +79,12 @@ def StartService():
   StartStopService('start')
 
 def CreateMarkerFile(version):
-  print('create marker file (' + markerfile + ') for version : ' + version)
   f = open(markerfile, 'w')
   f.write(version)
   f.close()
 
 def InstallPackage(pkg):
-  print('Installing package file : ' + pkg)
+  printLine('\nInstalling Jellyfin server.\n')
   RunCommand(['pkg', 'install', '-y', pkg])
 
 def InstallService():
@@ -99,9 +97,9 @@ def InstallService():
       CreateMarkerFile(GetLastestVersionJS())
       RemoveFile(tmpfile)
     else:
-      print('package download failed.')
+      print('\nJellyfin package download failed.\n')
   else:
-    print('Could not get download link from github.')
+    print('\nCould not get download link from github.\n')
     raise Exception('Download failed', url)
 
 def RunCommand(args):
@@ -133,4 +131,6 @@ def InstallOrUpdate():
     print('Jellyfin is installed and up to date.')
 
 # Main
+print('\n====== Jellyfin updater startup ======\n')
 InstallOrUpdate()
+print('\n====== Jellyfin updater completed ======\n')
