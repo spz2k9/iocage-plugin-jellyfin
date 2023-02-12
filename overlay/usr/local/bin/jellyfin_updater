@@ -133,4 +133,4 @@ def InstallOrUpdate():
 # Main
 print('\n====== Jellyfin updater startup ======\n')
 InstallOrUpdate()
-print('\n====== Jellyfin updater completed ======\n')
+print('====== Jellyfin updater completed ======\n\n')
