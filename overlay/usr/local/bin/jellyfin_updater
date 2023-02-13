@@ -91,7 +91,7 @@ def CreateMarkerFile(version):
 def InstallPackage(pkg):
   print('Installing Jellyfinserver... ')
   RunCommand(['pkg', 'install', '-y', pkg])
-  print('Installing Jellyfinserver... done.')
+  print('\nInstalling Jellyfinserver... done.')
 
 def InstallService():
   url = GetPkgUrlFromJS()
