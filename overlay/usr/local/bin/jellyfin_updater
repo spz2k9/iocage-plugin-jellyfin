@@ -29,7 +29,7 @@ def ReadFile(path):
 def CompareVersion(v1, v2):
   return v1 == v2
 
-def GetGitHubJsonLatest():
+def InitGitHubJsObject():
   global js
   response = urllib.request.urlopen(githubUrl)
   html = response.read()
@@ -48,10 +48,14 @@ def GetLastestVersionJS():
   return js['tag_name'].replace('v', '').strip()
 
 def DownloadFile(url, path):
-  print('Downloading "' + url +'" to "' + path + '"')
   if not FileExists(path):
+    print('Downloading Jellyfin... ', end='')
     urllib.request.urlretrieve(url, filename=path)
-  print('Download complete')
+    if not FileExists(path):
+      print('failed.')
+      raise Exception('Download failed : ', url)
+    else:
+      print('done.')
 
 def UpdatePresent():
   v1 = ReadFile(markerfile)
@@ -69,8 +73,9 @@ def PackageInstalled():
   return FileExists(markerfile)
 
 def StartStopService(action):
-  print('\nExecuting : service ' + action + ' jellyfinserver\n')
+  print('service ' + action + ' jellyfinserver... ', end='')
   RunCommand(['service', action, 'jellyfinserver'])
+  print('done.')
 
 def StopService():
   StartStopService('stop')
@@ -84,26 +89,24 @@ def CreateMarkerFile(version):
   f.close()
 
 def InstallPackage(pkg):
-  print('\nInstalling Jellyfin server.\n')
+  print('Installing Jellyfin server...\n---\n')
   RunCommand(['pkg', 'install', '-y', pkg])
+  print('\n---\nInstalling Jellyfin server... done.')
 
 def InstallService():
   url = GetPkgUrlFromJS()
 
   if not url == None:
     DownloadFile(url, tmpfile)
-    if FileExists(tmpfile):
-      InstallPackage(tmpfile)
-      CreateMarkerFile(GetLastestVersionJS())
-      RemoveFile(tmpfile)
-    else:
-      print('\nJellyfin package download failed.\n')
+    InstallPackage(tmpfile)
+    CreateMarkerFile(GetLastestVersionJS())
+    RemoveFile(tmpfile)
   else:
-    print('\nCould not get download link from github.\n')
-    raise Exception('Download failed', url)
+    print('Could not get download link from github.')
+    raise Exception('Failed to get GitHub url...')
 
 def RunCommand(args):
-  subprocess.run(args)
+  subprocess.run(args, check=True)
 
 def UpdateService():
   StopService()
@@ -111,7 +114,7 @@ def UpdateService():
   StartService()
 
 def InstallOrUpdate():
-  GetGitHubJsonLatest()
+  InitGitHubJsObject()
   vInstall = 0
   vUpdate = 0
 
@@ -133,4 +136,4 @@ def InstallOrUpdate():
 # Main
 print('\n====== Jellyfin updater startup ======\n')
 InstallOrUpdate()
-print('====== Jellyfin updater completed ======\n\n')
+print('\n====== Jellyfin updater completed ======\n')
