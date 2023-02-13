@@ -73,9 +73,9 @@ def PackageInstalled():
   return FileExists(markerfile)
 
 def StartStopService(action):
-  print('service ' + action + ' jellyfinserver... ', end='')
+  print('service ' + action + ' jellyfinserver... ')
   RunCommand(['service', action, 'jellyfinserver'])
-  print('done.')
+  print('service ' + action + ' jellyfinserver... done.')
 
 def StopService():
   StartStopService('stop')
@@ -89,9 +89,9 @@ def CreateMarkerFile(version):
   f.close()
 
 def InstallPackage(pkg):
-  print('Installing Jellyfinserver... ', end='')
+  print('Installing Jellyfinserver... ')
   RunCommand(['pkg', 'install', '-y', pkg])
-  print('done.')
+  print('Installing Jellyfinserver... done.')
 
 def InstallService():
   url = GetPkgUrlFromJS()
@@ -106,7 +106,7 @@ def InstallService():
     raise Exception('Failed to get GitHub url...')
 
 def RunCommand(args):
-  subprocess.run(args, check=True, stdout=subprocess.DEVNULL) # check with no output
+  subprocess.run(args, check=True) # check with no output
 
 def UpdateService():
   StopService()
