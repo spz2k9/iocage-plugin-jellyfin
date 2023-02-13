@@ -73,9 +73,9 @@ def PackageInstalled():
   return FileExists(markerfile)
 
 def StartStopService(action):
-  print('service ' + action + ' jellyfinserver... ')
-  RunCommand(['service', action, 'jellyfinserver'])
-  print('service ' + action + ' jellyfinserver... done.')
+  print('service jellyfinserver ' + action + '... ')
+  RunCommand(['service', 'jellyfinserver', action])
+  print('service jellyfinserver ' + action + '... done.')
 
 def StopService():
   StartStopService('stop')
