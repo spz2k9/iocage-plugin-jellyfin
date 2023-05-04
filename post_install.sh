@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # run the Install / Update script
-/usr/local/bin/jellyfin_updater
+pkg install -y ffmpeg jellyfin libva-intel-media-driver
 
 # Add the video group to the jellyfinserver user
 pw group mod video -m jellyfinserver
