@@ -4,10 +4,10 @@
 pkg install -y ffmpeg jellyfin libva-intel-media-driver
 
 # Add the video group to the jellyfinserver user
-pw group mod video -m jellyfinserver
+pw group mod video -m jellyfin
 
 # Enable the service
-sysrc -f /etc/rc.conf jellyfinserver_enable="YES"
+sysrc -f /etc/rc.conf jellyfin_enable="YES"
 
 # Start the service
-service jellyfinserver start 2>/dev/null
+service jellyfin start 2>/dev/null
