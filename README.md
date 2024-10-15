@@ -5,5 +5,4 @@ Artifact file(s) for Jellyfin Server iocage plugin
 ```
 fetch https://raw.githubusercontent.com/spz2k9/iocage-plugin-jellyfin/master/jellyfin.json
 iocage fetch -P ./jellyfin.json --name jellyfin
-rm ./jellyfin.json
 ```
